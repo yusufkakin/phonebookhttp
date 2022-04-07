@@ -8,7 +8,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 
 
-const phonelist = [
+let phonelist = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -65,7 +65,8 @@ app.get("/api/persons/:id", (req, res) => {
 })
     
 app.delete("/api/persons/:id", (req, res) => {
-    const person = phonelist.find((person) => person.id === Number(req.params.id))
+    const { id } = req.params;
+    phonelist = phonelist.filter(e => e.id !== id);
     
     if(!person){
         return res
@@ -104,6 +105,5 @@ app.post("/api/persons", (req, res) => {
     res.json(person);
 
 });
-
 
 app.listen(3001, () => {console.log("Listening on port 3001")})
