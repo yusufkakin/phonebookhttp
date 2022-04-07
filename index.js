@@ -1,10 +1,8 @@
+const { request } = require('express');
 const express = require('express');
 const app = express()
 
-// app.use((req,res) => {
-//     console.log("WE GOT A NEW REQUEST")
-//     res.send("Hello,we got your request")
-// })
+const morgan = require('morgan')
 
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
@@ -33,6 +31,15 @@ const phonelist = [
     }
 ]
 
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+
+morgan.token('body', (req) => {
+    if (req.method == "POST") {
+        return JSON.stringify(req.body)
+    }
+
+});
+
 app.get('/api/persons', (req,res) => {
 res.send({phonelist})
 })
@@ -43,6 +50,7 @@ app.get('/info', (req,res) => {
     res.send(`Phonebook has info for ${count} people<br><br>${datetime}`)
     
 })
+
 
 app.get("/api/persons/:id", (req, res) => {
     const { id } = req.params;
@@ -56,7 +64,6 @@ app.get("/api/persons/:id", (req, res) => {
     res.send(person)
 })
     
-
 app.delete("/api/persons/:id", (req, res) => {
     const person = phonelist.find((person) => person.id === Number(req.params.id))
     
