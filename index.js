@@ -94,7 +94,6 @@ app.post("/api/persons", (req, res) => {
         name: body.name,
         number: body.number,
     };
-    phonelist2 = phonelist.concat(randomizer);
     res.json(person);
 
 });
